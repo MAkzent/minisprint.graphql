@@ -59,6 +59,7 @@ const schema = buildSchema(`
   type Mutation {
     createPokemon(input: newPokemon): Pokemon
     updatePokemon(id: ID, input: newPokemon): Pokemon
+    deletePokemon(id: ID): Pokemon
   }
 `);
 
@@ -88,6 +89,10 @@ const root = {
       ...data[index],
       ...request.input,
     };
+  },
+  deletePokemon: (request) => {
+    const index = data.findIndex((pokemon) => pokemon.id == Number(request.id));
+    data.splice(index, 1);
   },
 };
 
