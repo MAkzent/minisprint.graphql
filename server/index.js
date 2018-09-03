@@ -58,6 +58,7 @@ const schema = buildSchema(`
   }
   type Mutation {
     createPokemon(input: newPokemon): Pokemon
+    updatePokemon(id: ID, input: newPokemon): Pokemon
   }
 `);
 
@@ -78,6 +79,15 @@ const root = {
       name: request.input.name,
       type: request.input.type,
     });
+    return data;
+  },
+  updatePokemon: (request) => {
+    // console.log(data[0]);
+    const index = data.findIndex((pokemon) => pokemon.id == Number(request.id));
+    data[index] = {
+      ...data[index],
+      ...request.input,
+    };
   },
 };
 
