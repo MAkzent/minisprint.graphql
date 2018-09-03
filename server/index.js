@@ -9,10 +9,55 @@ const schema = buildSchema(`
   type Pokemon {
     id: String
     name: String!
+    classification: String
+    types: [String]
+    resistant: String
+    weaknesses: String
+    weight: Weight
+    fleeRate: Float
+    evolutionRequirements: EvolutionRequirements
+    evolutions: [Evolution]
+    maxCP: Int
+    maxHP: Int
+    attacks: Attacks
+  }
+  type Weight {
+    minimum: String
+    maximum: String
+  }
+  type Height {
+    minimum: String
+    maximum: String
+  }
+  type EvolutionRequirements {
+    amount: Int
+    name: String
+  }
+  type Evolution {
+    id: Int
+    name: String
+  }
+  type Attacks {
+    fast: [Attack]
+    special: [Attack]
+  }
+  type Attack {
+    name: String
+    type: String
+    damage: Int
+  }
+  input newPokemon {
+    id: ID!
+    name: String
+    types: String
   }
   type Query {
     Pokemons: [Pokemon]
     Pokemon(name: String): Pokemon
+    highFlee: [Pokemon]
+  }
+  type Mutation {
+    createPokemon(input: newPokemon): Pokemon
   }
 `);
 
@@ -23,6 +68,16 @@ const root = {
   },
   Pokemon: (request) => {
     return data.find((pokemon) => pokemon.name === request.name);
+  },
+  highFlee: () => {
+    return data.filter((pokemon) => pokemon.fleeRate > 0.15);
+  },
+  createPokemon: (request) => {
+    data.push({
+      id: request.input.id,
+      name: request.input.name,
+      type: request.input.type,
+    });
   },
 };
 
